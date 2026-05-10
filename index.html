@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>1337 Admission - Check-in Test</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f5f5f5; }
+
+    nav {
+      background: #1a1a2e;
+      padding: 14px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    nav .logo { color: #00ff88; font-size: 1.5rem; font-weight: 900; letter-spacing: 4px; }
+    nav .user { color: #aaa; font-size: 0.9rem; }
+
+    .container { max-width: 860px; margin: 40px auto; padding: 0 20px; }
+
+    h1 { font-size: 1.6rem; font-weight: 700; margin-bottom: 8px; color: #1a1a2e; }
+    .subtitle { color: #555; margin-bottom: 8px; font-size: 0.95rem; }
+    .note { color: #333; margin-bottom: 24px; font-size: 0.95rem; }
+
+    .slot {
+      background: white;
+      border: 1px solid #e0e0e0;
+      border-radius: 10px;
+      padding: 20px 24px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .slot .info h3 { font-size: 1rem; font-weight: 600; color: #1a1a2e; }
+    .slot .info p { font-size: 0.85rem; color: #777; margin-top: 2px; }
+
+    .slot .right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .badge {
+      background: #ede9fe;
+      color: #7c3aed;
+      border-radius: 20px;
+      padding: 4px 14px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .count { font-size: 0.9rem; color: #333; font-weight: 500; }
+    .count span { color: #16a34a; font-weight: 700; }
+
+    button {
+      border: none;
+      border-radius: 8px;
+      padding: 10px 20px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    button.full {
+      background: #86efac;
+      color: #166534;
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+    button.confirm {
+      background: #16a34a;
+      color: white;
+    }
+    button.confirm:hover { opacity: 0.85; }
+    button.withdraw {
+      background: #dc2626;
+      color: white;
+    }
+
+    .controls {
+      background: white;
+      border: 1px solid #e0e0e0;
+      border-radius: 10px;
+      padding: 20px 24px;
+      margin-bottom: 32px;
+    }
+    .controls h2 { font-size: 1rem; font-weight: 700; margin-bottom: 14px; color: #1a1a2e; }
+    .controls .btns { display: flex; gap: 10px; flex-wrap: wrap; }
+    .controls .btns button {
+      background: #1a1a2e;
+      color: white;
+      font-size: 0.8rem;
+      padding: 8px 16px;
+      cursor: pointer;
+      border-radius: 6px;
+    }
+    .controls .btns button:hover { opacity: 0.85; }
+
+    .status-bar {
+      background: #f0fdf4;
+      border: 1px solid #86efac;
+      border-radius: 8px;
+      padding: 10px 16px;
+      margin-bottom: 20px;
+      font-size: 0.85rem;
+      color: #166534;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">1 3 3 7</div>
+  <div class="user">testuser@gmail.com</div>
+</nav>
+
+<div class="container">
+  <h1>Check-in Sessions</h1>
+  <p class="subtitle">To be notified when a new check-in is available, follow us on Twitter/X</p>
+  <p class="note">Note that your presence at this meeting is a condition for access to the "piscine" and therefore to progress with your application to 1337.</p>
+  <p class="note">Plan for the meeting to be for about 2 hours.</p>
+
+  <!-- Test Controls -->
+  <div class="controls">
+    <h2>🧪 Test Controls (not on real site)</h2>
+    <div class="btns">
+      <button onclick="makeAllFull()">Make All FULL</button>
+      <button onclick="openSlot(0)">Open Slot 1</button>
+      <button onclick="openSlot(1)">Open Slot 2</button>
+      <button onclick="openSlot(2)">Open Slot 3</button>
+      <button onclick="addNewSlot()">Add New Slot</button>
+    </div>
+  </div>
+
+  <div class="status-bar" id="status">All slots currently FULL — monitoring active</div>
+
+  <div id="slots">
+    <div class="slot" data-index="0">
+      <div class="info">
+        <h3>May 13, 2026 · 15:30</h3>
+        <p>Meeting Online</p>
+      </div>
+      <div class="right">
+        <span class="badge">Online</span>
+        <span class="count"><span id="count0">0</span> / 317</span>
+        <button class="full" id="btn0" disabled>FULL</button>
+      </div>
+    </div>
+
+    <div class="slot" data-index="1">
+      <div class="info">
+        <h3>May 15, 2026 · 15:30</h3>
+        <p>Meeting Online</p>
+      </div>
+      <div class="right">
+        <span class="badge">Online</span>
+        <span class="count"><span id="count1">0</span> / 317</span>
+        <button class="full" id="btn1" disabled>FULL</button>
+      </div>
+    </div>
+
+    <div class="slot" data-index="2">
+      <div class="info">
+        <h3>May 14, 2026 · 15:30</h3>
+        <p>Meeting Online</p>
+      </div>
+      <div class="right">
+        <span class="badge">Online</span>
+        <span class="count"><span id="count2">0</span> / 317</span>
+        <button class="full" id="btn2" disabled>FULL</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function makeAllFull() {
+    for (let i = 0; i < document.querySelectorAll('.slot').length; i++) {
+      const btn = document.getElementById('btn' + i);
+      if (btn) {
+        btn.textContent = 'FULL';
+        btn.className = 'full';
+        btn.disabled = true;
+      }
+    }
+    document.getElementById('status').textContent = 'All slots FULL — monitoring active';
+  }
+
+  function openSlot(index) {
+    const btn = document.getElementById('btn' + index);
+    if (!btn) return;
+    btn.textContent = 'CONFIRM SLOT';
+    btn.className = 'confirm';
+    btn.disabled = false;
+    document.getElementById('status').textContent = '🟢 Slot ' + (index + 1) + ' is now OPEN — script should detect this!';
+  }
+
+  let slotCount = 3;
+  function addNewSlot() {
+    const container = document.getElementById('slots');
+    const dates = ['May 16, 2026 · 15:30', 'May 17, 2026 · 15:30', 'May 18, 2026 · 15:30'];
+    const date = dates[slotCount - 3] || 'May ' + (16 + slotCount - 3) + ', 2026 · 15:30';
+    const div = document.createElement('div');
+    div.className = 'slot';
+    div.setAttribute('data-index', slotCount);
+    div.innerHTML = `
+      <div class="info">
+        <h3>${date}</h3>
+        <p>Meeting Online</p>
+      </div>
+      <div class="right">
+        <span class="badge">Online</span>
+        <span class="count"><span id="count${slotCount}">0</span> / 317</span>
+        <button class="confirm" id="btn${slotCount}">CONFIRM SLOT</button>
+      </div>
+    `;
+    container.appendChild(div);
+    document.getElementById('status').textContent = '🟢 New slot added and OPEN — script should detect this!';
+    slotCount++;
+  }
+</script>
+
+</body>
+</html>
